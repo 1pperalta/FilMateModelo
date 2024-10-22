@@ -1,7 +1,10 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS, cross_origin
 import joblib
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 # Cargar los datos de recomendación al inicio del servidor
 datamovies, similarity = joblib.load('movie_recommendation_system.pkl')
@@ -16,6 +19,7 @@ def recommendation_system(movie):
 
 # Ruta para obtener recomendaciones
 @app.route('/recommend', methods=['GET'])
+@cross_origin()
 def recommend():
     movie_title = request.args.get('movie')
     recommendations = recommendation_system(movie_title)
